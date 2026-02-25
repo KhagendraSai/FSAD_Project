@@ -74,6 +74,13 @@ const initialAssignments = [
   },
 ];
 
+const EMPTY_STUDENT_SUBMISSION_DRAFT = {
+  assignmentId: null,
+  fileName: '',
+  fileUrl: '',
+  comments: '',
+};
+
 function formatDate(iso) {
   if (!iso) return '—';
   const d = new Date(iso);
@@ -112,11 +119,7 @@ function AppInner() {
   });
   const [resetEmail, setResetEmail] = useState('');
 
-  const [studentSubmissionDraft, setStudentSubmissionDraft] = useState({
-    assignmentId: null,
-    fileName: '',
-    comments: '',
-  });
+  const [studentSubmissionDraft, setStudentSubmissionDraft] = useState(EMPTY_STUDENT_SUBMISSION_DRAFT);
 
   const [teacherAssignmentDraft, setTeacherAssignmentDraft] = useState({
     courseId: MOCK_COURSES[0].id,
@@ -208,6 +211,7 @@ function AppInner() {
           studentName: 'You',
           submittedAt: new Date().toISOString(),
           fileLink: studentSubmissionDraft.fileName.trim(),
+          fileUrl: studentSubmissionDraft.fileUrl || '',
           comments: studentSubmissionDraft.comments.trim(),
           grade: existing ? existing.grade : null,
           feedback: existing ? existing.feedback : '',
@@ -221,7 +225,7 @@ function AppInner() {
       })
     );
 
-    setStudentSubmissionDraft({ assignmentId: null, fileName: '', comments: '' });
+    setStudentSubmissionDraft(EMPTY_STUDENT_SUBMISSION_DRAFT);
   }
 
   function handleCreateAssignment() {
@@ -1009,6 +1013,7 @@ function AppInner() {
                                         setStudentSubmissionDraft({
                                           assignmentId: assignment.id,
                                           fileName: studentSubmission?.fileLink || '',
+                                          fileUrl: studentSubmission?.fileUrl || '',
                                           comments: studentSubmission?.comments || '',
                                         });
                                       }}
@@ -1120,9 +1125,7 @@ function AppInner() {
                                 const id = e.target.value || null;
                                 if (!id) {
                                   setStudentSubmissionDraft({
-                                    assignmentId: null,
-                                    fileName: '',
-                                    comments: '',
+                                    ...EMPTY_STUDENT_SUBMISSION_DRAFT,
                                   });
                                   return;
                                 }
@@ -1133,6 +1136,7 @@ function AppInner() {
                                 setStudentSubmissionDraft({
                                   assignmentId: id,
                                   fileName: submission?.fileLink || '',
+                                  fileUrl: submission?.fileUrl || '',
                                   comments: submission?.comments || '',
                                 });
                               }}
@@ -1156,6 +1160,7 @@ function AppInner() {
                                 setStudentSubmissionDraft((prev) => ({
                                   ...prev,
                                   fileName: file ? file.name : '',
+                                  fileUrl: file ? URL.createObjectURL(file) : '',
                                 }));
                               }}
                             />
@@ -1184,9 +1189,7 @@ function AppInner() {
                               className="secondary-button"
                               onClick={() =>
                                 setStudentSubmissionDraft({
-                                  assignmentId: null,
-                                  fileName: '',
-                                  comments: '',
+                                  ...EMPTY_STUDENT_SUBMISSION_DRAFT,
                                 })
                               }
                             >
@@ -1268,9 +1271,7 @@ function AppInner() {
                                     const id = e.target.value || null;
                                     if (!id) {
                                       setStudentSubmissionDraft({
-                                        assignmentId: null,
-                                        fileName: '',
-                                        comments: '',
+                                        ...EMPTY_STUDENT_SUBMISSION_DRAFT,
                                       });
                                       return;
                                     }
@@ -1281,6 +1282,7 @@ function AppInner() {
                                     setStudentSubmissionDraft({
                                       assignmentId: id,
                                       fileName: submission?.fileLink || '',
+                                      fileUrl: submission?.fileUrl || '',
                                       comments: submission?.comments || '',
                                     });
                                   }}
@@ -1304,6 +1306,7 @@ function AppInner() {
                                     setStudentSubmissionDraft((prev) => ({
                                       ...prev,
                                       fileName: file ? file.name : '',
+                                      fileUrl: file ? URL.createObjectURL(file) : '',
                                     }));
                                   }}
                                 />
@@ -1332,9 +1335,7 @@ function AppInner() {
                                   className="secondary-button"
                                   onClick={() =>
                                     setStudentSubmissionDraft({
-                                      assignmentId: null,
-                                      fileName: '',
-                                      comments: '',
+                                      ...EMPTY_STUDENT_SUBMISSION_DRAFT,
                                     })
                                   }
                                 >
@@ -1812,7 +1813,14 @@ function AppInner() {
                                         </span>
                                         {submission.fileLink && (
                                           <span className="tag-muted">
-                                            File: {submission.fileLink}
+                                            File:{' '}
+                                            {submission.fileUrl ? (
+                                              <a href={submission.fileUrl} download={submission.fileLink}>
+                                                {submission.fileLink}
+                                              </a>
+                                            ) : (
+                                              submission.fileLink
+                                            )}
                                           </span>
                                         )}
                                       </div>
