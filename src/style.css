@@ -34,6 +34,17 @@ button {
   font-family: inherit;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+  font-family: 'Segoe UI', 'Trebuchet MS', sans-serif;
+}
+
 .app-shell {
   min-height: 100vh;
   display: flex;

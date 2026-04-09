@@ -5,6 +5,18 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>review-project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            boxShadow: {
+              soft: '0 16px 40px rgba(15, 23, 42, 0.12)',
+            },
+          },
+        },
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>
